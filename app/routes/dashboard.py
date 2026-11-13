@@ -35,6 +35,25 @@ def get_dashboard():
     # Find highest spending category
     highest_category = categories[0] if categories else None
 
+    # Calculate Financial Health Score (0 - 100)
+    # Factors:
+    # 1. Savings rate (max 50 pts)
+    # 2. Budget adherence (max 30 pts)
+    # 3. Expense to Income ratio (max 20 pts)
+    income_val = summary.get("total_income", 0.0)
+    expense_val = summary.get("total_expense", 0.0)
+    savings_rate = summary.get("savings_rate", 0.0)
+
+    score = 50  # base
+    if income_val > 0:
+        savings_pts = min(40, max(0, int(savings_rate * 0.8)))
+        ratio_pts = 20 if expense_val <= (income_val * 0.7) else (10 if expense_val <= income_val else 0)
+        over_budget_count = sum(1 for b in budgets if b.get("alert") == "over budget")
+        budget_pts = max(0, 30 - (over_budget_count * 15))
+        score = min(100, max(15, savings_pts + ratio_pts + budget_pts + 10))
+
+    health_status = "Excellent" if score >= 80 else ("Good" if score >= 65 else ("Fair" if score >= 45 else "Needs Attention"))
+
     return jsonify(
         month=month,
         summary=summary,
@@ -43,6 +62,11 @@ def get_dashboard():
         budgets=budgets,
         recent_transactions=recent,
         highest_category=highest_category,
+        health_score={
+            "score": score,
+            "status": health_status,
+            "savings_rate": savings_rate,
+        },
     ), 200
 
 

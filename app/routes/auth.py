@@ -53,6 +53,29 @@ def register():
     ), 201
 
 
+@auth_bp.post("/demo-login")
+def demo_login():
+    """Instant one-click demo login without credentials."""
+    demo_email = "demo@smartspend.ai"
+    user = User.query.filter_by(email=demo_email).first()
+    if not user:
+        # Fallback to test user or first user
+        user = User.query.first()
+
+    if not user:
+        return jsonify(error="Demo account not ready."), 404
+
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token = create_refresh_token(identity=str(user.id))
+
+    return jsonify(
+        message="Demo login successful.",
+        user=user.to_dict(),
+        access_token=access_token,
+        refresh_token=refresh_token,
+    ), 200
+
+
 @auth_bp.post("/login")
 def login():
     """Authenticate user and return JWT tokens."""

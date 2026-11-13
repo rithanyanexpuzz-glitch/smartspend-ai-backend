@@ -8,6 +8,9 @@ from app.routes.insights import insights_bp
 from app.routes.recurring import recurring_bp
 from app.routes.receipts import receipts_bp
 from app.routes.notifications import notifications_bp
+from app.routes.goals import goals_bp
+from app.routes.advisor import advisor_bp
+from app.routes.splits import splits_bp
 
 
 def register_routes(app):
@@ -22,3 +25,6 @@ def register_routes(app):
     app.register_blueprint(recurring_bp, url_prefix="/api/recurring")
     app.register_blueprint(receipts_bp, url_prefix="/api/receipts")
     app.register_blueprint(notifications_bp, url_prefix="/api/notifications")
+    app.register_blueprint(goals_bp, url_prefix="/api/goals")
+    app.register_blueprint(advisor_bp, url_prefix="/api/advisor")
+    app.register_blueprint(splits_bp, url_prefix="/api/splits")

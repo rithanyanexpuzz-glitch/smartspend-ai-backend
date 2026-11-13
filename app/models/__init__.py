@@ -5,6 +5,7 @@ from app.models.income import Income
 from app.models.budget import Budget
 from app.models.recurring import RecurringExpense
 from app.models.notification import Notification
+from app.models.savings_goal import SavingsGoal
 
 __all__ = [
     "User",
@@ -14,4 +15,5 @@ __all__ = [
     "Budget",
     "RecurringExpense",
     "Notification",
+    "SavingsGoal",
 ]
